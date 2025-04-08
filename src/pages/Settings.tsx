@@ -1,11 +1,13 @@
 
 import React, { useState } from 'react';
-import { Bell, Mail, Lock, Globe, Eye, Moon } from 'lucide-react';
+import { Bell, Mail, Lock, Globe, Eye, Moon, Sun, Volume2, Calendar, Bell as BellIcon, Shield, Download } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
 import { toast } from 'sonner';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const Settings = () => {
   const [notifications, setNotifications] = useState({
@@ -19,7 +21,10 @@ const Settings = () => {
     darkMode: false,
     newsletter: true,
     autoPlay: false,
+    offlineMode: false
   });
+
+  const [textSize, setTextSize] = useState(100);
   
   const handleNotificationChange = (key: keyof typeof notifications) => {
     setNotifications(prev => ({
@@ -36,7 +41,13 @@ const Settings = () => {
     
     if (key === 'darkMode') {
       toast.success(`${!preferences.darkMode ? 'Dark' : 'Light'} mode activated`);
+    } else if (key === 'offlineMode') {
+      toast.success(`Offline mode ${!preferences.offlineMode ? 'enabled' : 'disabled'}`);
     }
+  };
+  
+  const handleTextSizeChange = (value: number[]) => {
+    setTextSize(value[0]);
   };
   
   const handleSaveNotifications = () => {
@@ -45,6 +56,11 @@ const Settings = () => {
   
   const handleSavePreferences = () => {
     toast.success("Preferences saved");
+  };
+  
+  const handleFeedbackSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast.success("Feedback submitted. Thank you!");
   };
   
   return (
@@ -115,7 +131,7 @@ const Settings = () => {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Globe className="mr-2 h-5 w-5" />
-              General Preferences
+              Display & Accessibility
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -124,35 +140,62 @@ const Settings = () => {
                 <Label className="text-base">Dark Mode</Label>
                 <p className="text-sm text-muted-foreground">Toggle between light and dark theme</p>
               </div>
-              <Switch 
-                checked={preferences.darkMode} 
-                onCheckedChange={() => handlePreferenceChange('darkMode')} 
+              <div className="flex items-center">
+                <Sun className="h-4 w-4 mr-2 text-muted-foreground" />
+                <Switch 
+                  checked={preferences.darkMode} 
+                  onCheckedChange={() => handlePreferenceChange('darkMode')} 
+                />
+                <Moon className="h-4 w-4 ml-2 text-muted-foreground" />
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <Label className="text-base">Text Size</Label>
+                <span className="text-sm text-muted-foreground">{textSize}%</span>
+              </div>
+              <Slider 
+                defaultValue={[textSize]} 
+                max={150} 
+                min={75} 
+                step={5}
+                onValueChange={handleTextSizeChange}
+                className="mt-2" 
               />
+              <p className="text-sm text-muted-foreground">Adjust the size of text throughout the application</p>
             </div>
             
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label className="text-base">Newsletter</Label>
-                <p className="text-sm text-muted-foreground">Receive our weekly newsletter</p>
+                <Label className="text-base">Language</Label>
+                <p className="text-sm text-muted-foreground">Change your preferred language</p>
               </div>
-              <Switch 
-                checked={preferences.newsletter} 
-                onCheckedChange={() => handlePreferenceChange('newsletter')} 
-              />
+              <Select defaultValue="en">
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue placeholder="Select language" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="en">English</SelectItem>
+                  <SelectItem value="es">Español</SelectItem>
+                  <SelectItem value="fr">Français</SelectItem>
+                  <SelectItem value="de">Deutsch</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label className="text-base">Auto-play Media</Label>
-                <p className="text-sm text-muted-foreground">Automatically play videos and audio</p>
+                <Label className="text-base">Offline Mode</Label>
+                <p className="text-sm text-muted-foreground">Download content for offline viewing</p>
               </div>
               <Switch 
-                checked={preferences.autoPlay} 
-                onCheckedChange={() => handlePreferenceChange('autoPlay')} 
+                checked={preferences.offlineMode} 
+                onCheckedChange={() => handlePreferenceChange('offlineMode')} 
               />
             </div>
             
-            <Button onClick={handleSavePreferences} className="w-full">Save Preferences</Button>
+            <Button onClick={handleSavePreferences} className="w-full">Save Display Settings</Button>
           </CardContent>
         </Card>
         
@@ -187,6 +230,14 @@ const Settings = () => {
               </div>
               <Button variant="outline" size="sm">Configure</Button>
             </div>
+            
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label className="text-base">Privacy Dashboard</Label>
+                <p className="text-sm text-muted-foreground">View and manage your privacy settings</p>
+              </div>
+              <Button variant="outline" size="sm">View</Button>
+            </div>
           </CardContent>
         </Card>
         
@@ -194,7 +245,7 @@ const Settings = () => {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Mail className="mr-2 h-5 w-5" />
-              Email Preferences
+              Communication Preferences
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -211,7 +262,15 @@ const Settings = () => {
                 <Label className="text-base">Email Format</Label>
                 <p className="text-sm text-muted-foreground">HTML or plain text emails</p>
               </div>
-              <Button variant="outline" size="sm">HTML</Button>
+              <Select defaultValue="html">
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue placeholder="Format" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="html">HTML</SelectItem>
+                  <SelectItem value="text">Plain Text</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
             
             <div className="flex items-center justify-between">
@@ -219,22 +278,95 @@ const Settings = () => {
                 <Label className="text-base">Email Frequency</Label>
                 <p className="text-sm text-muted-foreground">How often you receive emails</p>
               </div>
-              <Button variant="outline" size="sm">Daily</Button>
+              <Select defaultValue="daily">
+                <SelectTrigger className="w-[140px]">
+                  <SelectValue placeholder="Frequency" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="immediate">Immediately</SelectItem>
+                  <SelectItem value="daily">Daily</SelectItem>
+                  <SelectItem value="weekly">Weekly</SelectItem>
+                  <SelectItem value="monthly">Monthly</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <div className="space-y-0.5">
+                <Label className="text-base">Newsletter</Label>
+                <p className="text-sm text-muted-foreground">Receive our weekly newsletter</p>
+              </div>
+              <Switch 
+                checked={preferences.newsletter} 
+                onCheckedChange={() => handlePreferenceChange('newsletter')} 
+              />
             </div>
           </CardContent>
         </Card>
       </div>
       
-      <Card className="bg-muted/50 border-dashed">
-        <CardContent className="flex flex-col items-center justify-center p-6 text-center">
-          <Eye className="h-8 w-8 text-muted-foreground mb-2" />
-          <h3 className="text-lg font-medium">Privacy Policy</h3>
-          <p className="text-sm text-muted-foreground max-w-md mx-auto my-2">
-            We value your privacy. View our privacy policy to learn how we collect, use, and protect your personal information.
-          </p>
-          <Button variant="outline" className="mt-4">View Privacy Policy</Button>
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <Download className="mr-2 h-5 w-5" />
+            Download Data
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <p className="text-sm text-muted-foreground">Download a copy of your personal data and activity</p>
+          <div className="flex flex-wrap gap-3">
+            <Button variant="outline" className="flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              Activity Data
+            </Button>
+            <Button variant="outline" className="flex items-center gap-2">
+              <User className="h-4 w-4" />
+              Profile Data
+            </Button>
+            <Button variant="outline" className="flex items-center gap-2">
+              <Building className="h-4 w-4" />
+              Property Listings
+            </Button>
+            <Button variant="outline" className="flex items-center gap-2">
+              <MessageSquare className="h-4 w-4" />
+              Messages
+            </Button>
+          </div>
         </CardContent>
       </Card>
+      
+      <Card className="bg-muted/50 border-dashed">
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <Eye className="mr-2 h-5 w-5" />
+            Feedback & Support
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleFeedbackSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="feedback">Send us your feedback or report an issue</Label>
+              <textarea 
+                id="feedback" 
+                className="w-full min-h-[100px] p-3 border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-ring"
+                placeholder="Describe your experience or issue..."
+              />
+            </div>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button type="submit" className="flex-1">Submit Feedback</Button>
+              <Button variant="outline" className="flex-1" type="button">Contact Support</Button>
+            </div>
+            <p className="text-xs text-muted-foreground text-center mt-2">
+              We value your privacy. View our <a href="#" className="underline">privacy policy</a> to learn how we protect your data.
+            </p>
+          </form>
+        </CardContent>
+      </Card>
+      
+      <div className="flex justify-end gap-3 pb-10 md:pb-0">
+        <Button variant="outline" size="lg">Reset to Defaults</Button>
+        <Button size="lg">Save All Settings</Button>
+      </div>
     </div>
   );
 };
