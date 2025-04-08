@@ -6,6 +6,11 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
+import Explore from "./pages/Explore";
+import Listings from "./pages/Listings";
+import Messages from "./pages/Messages";
+import Profile from "./pages/Profile";
+import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
@@ -24,39 +29,29 @@ const App = () => (
               <Dashboard />
             </Layout>
           } />
-          <Route path="/courses" element={
+          <Route path="/explore" element={
             <Layout>
-              <div className="min-h-[80vh] flex items-center justify-center">
-                <h1 className="text-2xl font-medium text-muted-foreground">Courses page coming soon!</h1>
-              </div>
+              <Explore />
             </Layout>
           } />
-          <Route path="/quiz" element={
+          <Route path="/listings" element={
             <Layout>
-              <div className="min-h-[80vh] flex items-center justify-center">
-                <h1 className="text-2xl font-medium text-muted-foreground">Quiz page coming soon!</h1>
-              </div>
+              <Listings />
             </Layout>
           } />
-          <Route path="/achievements" element={
+          <Route path="/messages" element={
             <Layout>
-              <div className="min-h-[80vh] flex items-center justify-center">
-                <h1 className="text-2xl font-medium text-muted-foreground">Achievements page coming soon!</h1>
-              </div>
+              <Messages />
             </Layout>
           } />
-          <Route path="/discussions" element={
+          <Route path="/profile" element={
             <Layout>
-              <div className="min-h-[80vh] flex items-center justify-center">
-                <h1 className="text-2xl font-medium text-muted-foreground">Discussions page coming soon!</h1>
-              </div>
+              <Profile />
             </Layout>
           } />
           <Route path="/settings" element={
             <Layout>
-              <div className="min-h-[80vh] flex items-center justify-center">
-                <h1 className="text-2xl font-medium text-muted-foreground">Settings page coming soon!</h1>
-              </div>
+              <Settings />
             </Layout>
           } />
           <Route path="*" element={<NotFound />} />
