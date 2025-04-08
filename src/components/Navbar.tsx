@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Bell, User, Menu, Settings, LogOut } from 'lucide-react';
+import { Bell, User, Menu, Settings, LogOut, BookOpen, GraduationCap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -36,9 +36,9 @@ const Navbar = ({ toggleSidebar }: NavbarProps) => {
         </Button>
         <div className="flex items-center gap-2">
           <div className="rounded-full bg-primary w-8 h-8 flex items-center justify-center">
-            <span className="text-white font-bold">PH</span>
+            <span className="text-white font-bold">LW</span>
           </div>
-          <span className="font-bold text-primary hidden sm:inline">PropertyHub</span>
+          <span className="font-bold text-primary hidden sm:inline">LearnWise</span>
         </div>
       </div>
       
@@ -56,18 +56,18 @@ const Navbar = ({ toggleSidebar }: NavbarProps) => {
               <Button variant="ghost" size="sm" className="text-xs">Mark all as read</Button>
             </div>
             <DropdownMenuItem className="p-3 flex flex-col items-start cursor-pointer">
-              <div className="font-medium">New message received</div>
-              <div className="text-sm text-muted-foreground">Sarah has sent you a message about your listing</div>
+              <div className="font-medium">New quiz available</div>
+              <div className="text-sm text-muted-foreground">New quiz on Kinematics is now available</div>
               <div className="text-xs text-muted-foreground mt-1">Just now</div>
             </DropdownMenuItem>
             <DropdownMenuItem className="p-3 flex flex-col items-start cursor-pointer">
-              <div className="font-medium">Listing approved</div>
-              <div className="text-sm text-muted-foreground">Your Seattle property has been approved</div>
+              <div className="font-medium">AI Tutor feedback</div>
+              <div className="text-sm text-muted-foreground">AI Tutor provided feedback on your Chemistry lesson</div>
               <div className="text-xs text-muted-foreground mt-1">2 hours ago</div>
             </DropdownMenuItem>
             <DropdownMenuItem className="p-3 flex flex-col items-start cursor-pointer">
-              <div className="font-medium">New property match</div>
-              <div className="text-sm text-muted-foreground">A new property matches your saved search</div>
+              <div className="font-medium">New badge earned</div>
+              <div className="text-sm text-muted-foreground">You've earned a new badge: 7-Day Streak!</div>
               <div className="text-xs text-muted-foreground mt-1">Yesterday</div>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
@@ -91,6 +91,10 @@ const Navbar = ({ toggleSidebar }: NavbarProps) => {
             <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/settings')}>
               <Settings className="h-4 w-4 mr-2" />
               Settings
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/ai-tutor')}>
+              <GraduationCap className="h-4 w-4 mr-2" />
+              AI Tutor
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive" onClick={handleLogout}>

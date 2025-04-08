@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { Bell, Mail, Lock, Globe, Eye, Moon, Sun, Volume2, Calendar, Bell as BellIcon, Shield, Download } from 'lucide-react';
+import { Bell, Mail, Lock, Globe, Eye, Moon, Sun, Volume2, Calendar, Bell as BellIcon, Shield, Download, User, MessageSquare, Building } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -67,7 +66,7 @@ const Settings = () => {
     <div className="space-y-8 animate-fade-in">
       <div>
         <h1 className="text-3xl font-bold">Settings</h1>
-        <p className="text-muted-foreground mt-1">Manage your account preferences</p>
+        <p className="text-muted-foreground mt-1">Manage your learning preferences</p>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -82,7 +81,7 @@ const Settings = () => {
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label className="text-base">Email Notifications</Label>
-                <p className="text-sm text-muted-foreground">Receive emails about your account activity</p>
+                <p className="text-sm text-muted-foreground">Receive emails about new lessons and updates</p>
               </div>
               <Switch 
                 checked={notifications.email} 
@@ -93,7 +92,7 @@ const Settings = () => {
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label className="text-base">Push Notifications</Label>
-                <p className="text-sm text-muted-foreground">Receive push notifications on your device</p>
+                <p className="text-sm text-muted-foreground">Receive push notifications for AI tutor responses</p>
               </div>
               <Switch 
                 checked={notifications.push} 
@@ -103,8 +102,8 @@ const Settings = () => {
             
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label className="text-base">Message Notifications</Label>
-                <p className="text-sm text-muted-foreground">Get notified when you receive messages</p>
+                <Label className="text-base">Learning Reminders</Label>
+                <p className="text-sm text-muted-foreground">Get reminded about daily learning goals</p>
               </div>
               <Switch 
                 checked={notifications.messages} 
@@ -115,7 +114,7 @@ const Settings = () => {
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label className="text-base">Updates & Announcements</Label>
-                <p className="text-sm text-muted-foreground">Hear about new features and updates</p>
+                <p className="text-sm text-muted-foreground">Hear about new features and educational content</p>
               </div>
               <Switch 
                 checked={notifications.updates} 
@@ -163,7 +162,7 @@ const Settings = () => {
                 onValueChange={handleTextSizeChange}
                 className="mt-2" 
               />
-              <p className="text-sm text-muted-foreground">Adjust the size of text throughout the application</p>
+              <p className="text-sm text-muted-foreground">Adjust the size of text for better readability</p>
             </div>
             
             <div className="flex items-center justify-between">
@@ -180,14 +179,15 @@ const Settings = () => {
                   <SelectItem value="es">Español</SelectItem>
                   <SelectItem value="fr">Français</SelectItem>
                   <SelectItem value="de">Deutsch</SelectItem>
+                  <SelectItem value="am">አማርኛ</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label className="text-base">Offline Mode</Label>
-                <p className="text-sm text-muted-foreground">Download content for offline viewing</p>
+                <Label className="text-base">Offline Learning</Label>
+                <p className="text-sm text-muted-foreground">Download lessons for offline studying</p>
               </div>
               <Switch 
                 checked={preferences.offlineMode} 
@@ -217,7 +217,7 @@ const Settings = () => {
             
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label className="text-base">Connected Devices</Label>
+                <Label className="text-base">Study Devices</Label>
                 <p className="text-sm text-muted-foreground">Manage devices that have access to your account</p>
               </div>
               <Button variant="outline" size="sm">Manage</Button>
@@ -225,8 +225,8 @@ const Settings = () => {
             
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label className="text-base">Data Sharing</Label>
-                <p className="text-sm text-muted-foreground">Control how your data is used and shared</p>
+                <Label className="text-base">Learning Data</Label>
+                <p className="text-sm text-muted-foreground">Control how your learning data is used for personalization</p>
               </div>
               <Button variant="outline" size="sm">Configure</Button>
             </div>
@@ -234,7 +234,7 @@ const Settings = () => {
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label className="text-base">Privacy Dashboard</Label>
-                <p className="text-sm text-muted-foreground">View and manage your privacy settings</p>
+                <p className="text-sm text-muted-foreground">Review and manage your privacy settings</p>
               </div>
               <Button variant="outline" size="sm">View</Button>
             </div>
@@ -252,7 +252,7 @@ const Settings = () => {
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
                 <Label className="text-base">Primary Email</Label>
-                <p className="text-sm text-muted-foreground">alex.johnson@example.com</p>
+                <p className="text-sm text-muted-foreground">liya.tesfaye@example.com</p>
               </div>
               <Button variant="outline" size="sm">Change</Button>
             </div>
@@ -275,17 +275,17 @@ const Settings = () => {
             
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label className="text-base">Email Frequency</Label>
-                <p className="text-sm text-muted-foreground">How often you receive emails</p>
+                <Label className="text-base">Learning Summaries</Label>
+                <p className="text-sm text-muted-foreground">How often you receive learning progress emails</p>
               </div>
               <Select defaultValue="daily">
                 <SelectTrigger className="w-[140px]">
                   <SelectValue placeholder="Frequency" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="immediate">Immediately</SelectItem>
-                  <SelectItem value="daily">Daily</SelectItem>
-                  <SelectItem value="weekly">Weekly</SelectItem>
+                  <SelectItem value="immediate">Daily</SelectItem>
+                  <SelectItem value="daily">Weekly</SelectItem>
+                  <SelectItem value="weekly">Biweekly</SelectItem>
                   <SelectItem value="monthly">Monthly</SelectItem>
                 </SelectContent>
               </Select>
@@ -293,8 +293,8 @@ const Settings = () => {
             
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label className="text-base">Newsletter</Label>
-                <p className="text-sm text-muted-foreground">Receive our weekly newsletter</p>
+                <Label className="text-base">Educational Newsletter</Label>
+                <p className="text-sm text-muted-foreground">Receive our weekly educational newsletter</p>
               </div>
               <Switch 
                 checked={preferences.newsletter} 
@@ -309,15 +309,15 @@ const Settings = () => {
         <CardHeader>
           <CardTitle className="flex items-center">
             <Download className="mr-2 h-5 w-5" />
-            Download Data
+            Download Learning Data
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-sm text-muted-foreground">Download a copy of your personal data and activity</p>
+          <p className="text-sm text-muted-foreground">Download a copy of your learning data and activity</p>
           <div className="flex flex-wrap gap-3">
             <Button variant="outline" className="flex items-center gap-2">
               <Calendar className="h-4 w-4" />
-              Activity Data
+              Study History
             </Button>
             <Button variant="outline" className="flex items-center gap-2">
               <User className="h-4 w-4" />
@@ -325,11 +325,11 @@ const Settings = () => {
             </Button>
             <Button variant="outline" className="flex items-center gap-2">
               <Building className="h-4 w-4" />
-              Property Listings
+              Course Materials
             </Button>
             <Button variant="outline" className="flex items-center gap-2">
               <MessageSquare className="h-4 w-4" />
-              Messages
+              AI Tutor Chats
             </Button>
           </div>
         </CardContent>
@@ -349,7 +349,7 @@ const Settings = () => {
               <textarea 
                 id="feedback" 
                 className="w-full min-h-[100px] p-3 border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-ring"
-                placeholder="Describe your experience or issue..."
+                placeholder="Tell us how we can improve your learning experience..."
               />
             </div>
             <div className="flex flex-col sm:flex-row gap-3">

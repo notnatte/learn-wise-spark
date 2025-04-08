@@ -6,11 +6,13 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
-import Explore from "./pages/Explore";
-import Listings from "./pages/Listings";
+import Courses from "./pages/Explore";
+import Lessons from "./pages/Listings";
 import Messages from "./pages/Messages";
 import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
+import AITutor from "./pages/AITutor";
+import Progress from "./pages/Progress";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 
@@ -31,17 +33,27 @@ const App = () => (
           } />
           <Route path="/explore" element={
             <Layout>
-              <Explore />
+              <Courses />
             </Layout>
           } />
           <Route path="/listings" element={
             <Layout>
-              <Listings />
+              <Lessons />
             </Layout>
           } />
           <Route path="/messages" element={
             <Layout>
               <Messages />
+            </Layout>
+          } />
+          <Route path="/ai-tutor" element={
+            <Layout>
+              <AITutor />
+            </Layout>
+          } />
+          <Route path="/progress" element={
+            <Layout>
+              <Progress />
             </Layout>
           } />
           <Route path="/profile" element={

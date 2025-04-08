@@ -1,64 +1,86 @@
 
 import React, { useState } from 'react';
-import { Search, MapPin, Heart } from 'lucide-react';
+import { Search, BookOpen, Heart, Clock, Star, Filter, ChevronRight, Award } from 'lucide-react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from '@/components/ui/select';
 
-const properties = [
+const courses = [
   {
     id: 1,
-    title: 'Modern Downtown Apartment',
-    image: 'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8YXBhcnRtZW50fGVufDB8fDB8fHww',
-    location: 'Seattle, WA',
-    price: '$2,500/month',
+    title: 'Algebra Fundamentals',
+    image: 'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    subject: 'Mathematics',
+    level: 'Intermediate',
+    duration: '2 hours',
+    rating: 4.8,
     favorite: false,
   },
   {
     id: 2,
-    title: 'Cozy Studio with City View',
-    image: 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8YXBhcnRtZW50fGVufDB8fDB8fHww',
-    location: 'Portland, OR',
-    price: '$1,850/month',
+    title: 'Advanced Calculus',
+    image: 'https://images.unsplash.com/photo-1594912772768-0446bd8f20cc?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    subject: 'Mathematics',
+    level: 'Advanced',
+    duration: '3.5 hours',
+    rating: 4.6,
     favorite: true,
   },
   {
     id: 3,
-    title: 'Luxury Penthouse Suite',
-    image: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8YXBhcnRtZW50fGVufDB8fDB8fHww',
-    location: 'San Francisco, CA',
-    price: '$4,200/month',
+    title: 'Newtonian Mechanics',
+    image: 'https://images.unsplash.com/photo-1617791160505-6f00504e3519?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    subject: 'Physics',
+    level: 'Intermediate',
+    duration: '2.5 hours',
+    rating: 4.9,
     favorite: false,
   },
   {
     id: 4,
-    title: 'Spacious 2BR with Balcony',
-    image: 'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGFwYXJ0bWVudHxlbnwwfHwwfHx8MA%3D%3D',
-    location: 'Denver, CO',
-    price: '$2,150/month',
+    title: 'Quantum Physics',
+    image: 'https://images.unsplash.com/photo-1662950689791-a95e8d8ff6a0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    subject: 'Physics',
+    level: 'Advanced',
+    duration: '4 hours',
+    rating: 4.7,
     favorite: false,
   },
   {
     id: 5,
-    title: 'Historic Loft Apartment',
-    image: 'https://images.unsplash.com/photo-1619166719123-781c1d0f9f2c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjR8fGFwYXJ0bWVudHxlbnwwfHwwfHx8MA%3D%3D',
-    location: 'Chicago, IL',
-    price: '$1,950/month',
+    title: 'Organic Chemistry',
+    image: 'https://images.unsplash.com/photo-1603126857599-f6e157fa2fe6?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    subject: 'Chemistry',
+    level: 'Intermediate',
+    duration: '3 hours',
+    rating: 4.5,
     favorite: true,
   },
   {
     id: 6,
-    title: 'Modern Garden Apartment',
-    image: 'https://images.unsplash.com/photo-1598928506311-c55ded91a20c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8YXBhcnRtZW50fGVufDB8fDB8fHww',
-    location: 'Austin, TX',
-    price: '$1,850/month',
+    title: 'Cell Biology',
+    image: 'https://images.unsplash.com/photo-1576086213369-97a306d36557?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    subject: 'Biology',
+    level: 'Beginner',
+    duration: '2 hours',
+    rating: 4.3,
     favorite: false,
   },
 ];
 
-const Explore = () => {
+const Courses = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [favorites, setFavorites] = useState<number[]>(properties.filter(p => p.favorite).map(p => p.id));
+  const [favorites, setFavorites] = useState<number[]>(courses.filter(c => c.favorite).map(c => c.id));
+  const [subjectFilter, setSubjectFilter] = useState('all');
+  const [levelFilter, setLevelFilter] = useState('all');
   
   const toggleFavorite = (id: number) => {
     setFavorites(prev => 
@@ -68,58 +90,107 @@ const Explore = () => {
     );
   };
 
-  const filteredProperties = searchTerm
-    ? properties.filter(property => 
-        property.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        property.location.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : properties;
+  const filteredCourses = courses.filter(course => {
+    const matchesSearch = searchTerm
+      ? course.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        course.subject.toLowerCase().includes(searchTerm.toLowerCase())
+      : true;
+    
+    const matchesSubject = subjectFilter === 'all' || course.subject.toLowerCase() === subjectFilter;
+    const matchesLevel = levelFilter === 'all' || course.level.toLowerCase() === levelFilter;
+    
+    return matchesSearch && matchesSubject && matchesLevel;
+  });
   
   return (
     <div className="space-y-8 animate-fade-in">
       <div>
-        <h1 className="text-3xl font-bold">Explore Properties</h1>
-        <p className="text-muted-foreground mt-1">Find your perfect home</p>
+        <h1 className="text-3xl font-bold">Explore Courses</h1>
+        <p className="text-muted-foreground mt-1">Discover new subjects and expand your knowledge</p>
       </div>
       
-      <div className="relative">
-        <Input
-          placeholder="Search by location, property name..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="pl-10"
-        />
-        <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+      <div className="flex flex-col md:flex-row gap-4">
+        <div className="relative flex-1">
+          <Input
+            placeholder="Search by course name, subject..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+        </div>
+        
+        <div className="flex gap-3">
+          <Select value={subjectFilter} onValueChange={setSubjectFilter}>
+            <SelectTrigger className="w-[160px]">
+              <Filter className="h-4 w-4 mr-2" />
+              <SelectValue placeholder="Subject" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Subjects</SelectItem>
+              <SelectItem value="mathematics">Mathematics</SelectItem>
+              <SelectItem value="physics">Physics</SelectItem>
+              <SelectItem value="chemistry">Chemistry</SelectItem>
+              <SelectItem value="biology">Biology</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <Select value={levelFilter} onValueChange={setLevelFilter}>
+            <SelectTrigger className="w-[160px]">
+              <Award className="h-4 w-4 mr-2" />
+              <SelectValue placeholder="Level" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Levels</SelectItem>
+              <SelectItem value="beginner">Beginner</SelectItem>
+              <SelectItem value="intermediate">Intermediate</SelectItem>
+              <SelectItem value="advanced">Advanced</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProperties.map((property) => (
-          <Card key={property.id} className="overflow-hidden group">
+        {filteredCourses.map((course) => (
+          <Card key={course.id} className="overflow-hidden group hover-scale">
             <div className="relative h-48 w-full">
               <img 
-                src={property.image} 
-                alt={property.title} 
+                src={course.image} 
+                alt={course.title} 
                 className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               />
               <Button 
                 size="icon" 
                 variant="ghost" 
-                className={`absolute top-2 right-2 bg-white/70 hover:bg-white ${favorites.includes(property.id) ? 'text-red-500' : 'text-muted-foreground'}`}
-                onClick={() => toggleFavorite(property.id)}
+                className={`absolute top-2 right-2 bg-white/70 hover:bg-white ${favorites.includes(course.id) ? 'text-red-500' : 'text-muted-foreground'}`}
+                onClick={() => toggleFavorite(course.id)}
               >
-                <Heart className={`h-5 w-5 ${favorites.includes(property.id) ? 'fill-current' : ''}`} />
+                <Heart className={`h-5 w-5 ${favorites.includes(course.id) ? 'fill-current' : ''}`} />
               </Button>
+              <Badge className="absolute bottom-2 left-2 bg-black/50">{course.subject}</Badge>
             </div>
             <CardContent className="pt-4">
-              <h3 className="font-semibold text-lg">{property.title}</h3>
-              <div className="flex items-center text-muted-foreground mt-1">
-                <MapPin className="h-4 w-4 mr-1" />
-                <span className="text-sm">{property.location}</span>
+              <h3 className="font-semibold text-lg mb-1">{course.title}</h3>
+              <div className="flex flex-wrap gap-2 mt-2">
+                <div className="flex items-center text-muted-foreground text-sm">
+                  <Clock className="h-4 w-4 mr-1" />
+                  <span>{course.duration}</span>
+                </div>
+                <div className="flex items-center text-muted-foreground text-sm">
+                  <Award className="h-4 w-4 mr-1" />
+                  <span>{course.level}</span>
+                </div>
+                <div className="flex items-center text-muted-foreground text-sm">
+                  <Star className="h-4 w-4 mr-1 text-yellow-500" />
+                  <span>{course.rating}</span>
+                </div>
               </div>
             </CardContent>
             <CardFooter className="border-t px-6 py-3 flex justify-between items-center">
-              <p className="font-medium text-primary">{property.price}</p>
-              <Button variant="outline" size="sm">View Details</Button>
+              <Button variant="outline" size="sm" className="w-full flex justify-between items-center">
+                Start Learning
+                <ChevronRight className="h-4 w-4" />
+              </Button>
             </CardFooter>
           </Card>
         ))}
@@ -128,4 +199,4 @@ const Explore = () => {
   );
 };
 
-export default Explore;
+export default Courses;

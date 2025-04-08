@@ -1,33 +1,37 @@
 
 import React, { useState } from 'react';
-import { Search, Send, User, Check, Clock } from 'lucide-react';
+import { Search, Send, User, Check, Clock, GraduationCap, BookOpen } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { Badge } from '@/components/ui/badge';
 
 const initialContacts = [
   {
     id: 1,
-    name: 'Sarah Miller',
+    name: 'Ms. Johnson',
+    role: 'Math Teacher',
     avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
-    lastMessage: 'Is the apartment still available?',
+    lastMessage: 'How is your calculus homework coming along?',
     time: '10:30 AM',
     unread: true,
   },
   {
     id: 2,
-    name: 'Michael Thompson',
+    name: 'Dr. Thompson',
+    role: 'Physics Tutor',
     avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
-    lastMessage: 'Thanks for the tour yesterday',
+    lastMessage: 'Let me know if you have questions about the lab',
     time: 'Yesterday',
     unread: false,
   },
   {
     id: 3,
-    name: 'Jessica Chen',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
-    lastMessage: 'When can I schedule a viewing?',
+    name: 'Chemistry Study Group',
+    role: 'Group Chat',
+    avatar: 'https://images.unsplash.com/photo-1603126857599-f6e157fa2fe6?w=100&auto=format&fit=crop&q=60&ixlib=rb-4.0.3',
+    lastMessage: 'Makda: Are we meeting tomorrow for study session?',
     time: 'May 3',
     unread: false,
   },
@@ -37,32 +41,32 @@ const initialMessages = [
   {
     id: 1,
     sender: 'other',
-    text: 'Hi there! I saw your listing for the downtown apartment.',
+    text: 'Hi Liya! How is your calculus homework coming along?',
     time: '10:15 AM',
   },
   {
     id: 2,
     sender: 'other',
-    text: 'Is the apartment still available for rent?',
+    text: 'Remember to use the chain rule for those differentiation problems.',
     time: '10:16 AM',
   },
   {
     id: 3,
     sender: 'self',
-    text: 'Yes, it is! Are you interested in scheduling a viewing?',
+    text: 'Hi Ms. Johnson! I\'m working on it now. I\'m having some trouble with problem #5 about related rates.',
     time: '10:20 AM',
     status: 'read',
   },
   {
     id: 4,
     sender: 'other',
-    text: 'That would be great. I was hoping to see it this weekend if possible.',
+    text: 'For related rates problems, try drawing a diagram first to visualize the relationships between variables. Then identify which quantities are changing with respect to time.',
     time: '10:25 AM',
   },
   {
     id: 5,
     sender: 'self',
-    text: 'I can arrange a viewing on Saturday at 2PM. Does that work for you?',
+    text: 'That helps! So for this problem about the water tank, I should start by writing the formula for the volume?',
     time: '10:30 AM',
     status: 'sent',
   },
@@ -124,6 +128,7 @@ const Messages = () => {
                     <h3 className="font-medium truncate">{contact.name}</h3>
                     <span className="text-xs text-muted-foreground">{contact.time}</span>
                   </div>
+                  <p className="text-xs text-muted-foreground">{contact.role}</p>
                   <p className="text-sm text-muted-foreground truncate">{contact.lastMessage}</p>
                 </div>
               </div>
@@ -134,17 +139,30 @@ const Messages = () => {
         <Card className="md:col-span-2 flex flex-col h-full">
           {selectedContact ? (
             <>
-              <div className="p-4 border-b flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full overflow-hidden">
-                  <img 
-                    src={selectedContact.avatar} 
-                    alt={selectedContact.name} 
-                    className="w-full h-full object-cover"
-                  />
+              <div className="p-4 border-b flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full overflow-hidden">
+                    <img 
+                      src={selectedContact.avatar} 
+                      alt={selectedContact.name} 
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <h3 className="font-medium">{selectedContact.name}</h3>
+                    <p className="text-xs text-muted-foreground">{selectedContact.role}</p>
+                  </div>
                 </div>
                 <div>
-                  <h3 className="font-medium">{selectedContact.name}</h3>
-                  <p className="text-xs text-muted-foreground">Active Now</p>
+                  {selectedContact.id === 1 && (
+                    <Badge className="bg-blue-100 text-blue-700">Mathematics</Badge>
+                  )}
+                  {selectedContact.id === 2 && (
+                    <Badge className="bg-purple-100 text-purple-700">Physics</Badge>
+                  )}
+                  {selectedContact.id === 3 && (
+                    <Badge className="bg-green-100 text-green-700">Chemistry</Badge>
+                  )}
                 </div>
               </div>
               
@@ -210,7 +228,7 @@ const Messages = () => {
           ) : (
             <div className="flex items-center justify-center h-full flex-col p-6 text-center">
               <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                <User className="h-8 w-8 text-muted-foreground" />
+                <GraduationCap className="h-8 w-8 text-muted-foreground" />
               </div>
               <h3 className="text-xl font-medium mb-2">No Conversation Selected</h3>
               <p className="text-muted-foreground">Choose a conversation from the list to start messaging</p>

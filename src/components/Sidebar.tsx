@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Home, Building, MessageSquare, User, Settings } from 'lucide-react';
+import { Home, BookOpen, GraduationCap, MessageSquare, User, Settings, BookMarked, Award } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface SidebarProps {
@@ -12,9 +12,11 @@ interface SidebarProps {
 const Sidebar = ({ isOpen, currentRoute, onNavigate }: SidebarProps) => {
   const navItems = [
     { icon: Home, label: 'Dashboard', route: '/' },
-    { icon: Building, label: 'Explore', route: '/explore' },
-    { icon: Building, label: 'My Listings', route: '/listings' },
+    { icon: BookOpen, label: 'Courses', route: '/explore' },
+    { icon: BookMarked, label: 'My Lessons', route: '/listings' },
     { icon: MessageSquare, label: 'Messages', route: '/messages' },
+    { icon: GraduationCap, label: 'AI Tutor', route: '/ai-tutor' },
+    { icon: Award, label: 'Progress', route: '/progress' },
     { icon: User, label: 'Profile', route: '/profile' },
     { icon: Settings, label: 'Settings', route: '/settings' },
   ];
@@ -29,10 +31,10 @@ const Sidebar = ({ isOpen, currentRoute, onNavigate }: SidebarProps) => {
     >
       <div className="flex items-center justify-center h-16 border-b border-sidebar-border">
         {isOpen ? (
-          <h1 className="text-white font-bold text-xl">PropertyHub</h1>
+          <h1 className="text-white font-bold text-xl">LearnWise</h1>
         ) : (
           <div className="hidden md:flex items-center justify-center rounded-full bg-white w-8 h-8">
-            <span className="font-bold text-primary">PH</span>
+            <span className="font-bold text-primary">LW</span>
           </div>
         )}
       </div>
@@ -69,8 +71,8 @@ const Sidebar = ({ isOpen, currentRoute, onNavigate }: SidebarProps) => {
           </div>
           {isOpen && (
             <div className="ml-3">
-              <p className="text-white font-medium">Alex Johnson</p>
-              <p className="text-sidebar-accent text-xs">Property Manager</p>
+              <p className="text-white font-medium">Liya Tesfaye</p>
+              <p className="text-sidebar-accent text-xs">Grade 11 Student</p>
             </div>
           )}
         </div>

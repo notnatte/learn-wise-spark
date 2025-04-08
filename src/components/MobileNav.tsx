@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Home, Building, MessageSquare, User, Settings } from 'lucide-react';
+import { Home, BookOpen, MessageSquare, User, GraduationCap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface MobileNavProps {
@@ -11,9 +11,9 @@ interface MobileNavProps {
 const MobileNav = ({ currentRoute, onNavigate }: MobileNavProps) => {
   const navItems = [
     { icon: Home, label: 'Home', route: '/' },
-    { icon: Building, label: 'Explore', route: '/explore' },
+    { icon: BookOpen, label: 'Courses', route: '/explore' },
+    { icon: GraduationCap, label: 'AI Tutor', route: '/ai-tutor' },
     { icon: MessageSquare, label: 'Messages', route: '/messages' },
-    { icon: Building, label: 'Listings', route: '/listings' },
     { icon: User, label: 'Profile', route: '/profile' },
   ];
 
