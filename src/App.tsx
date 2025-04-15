@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { useAuth } from "./hooks/useAuth";
 import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import Courses from "./pages/Explore";
@@ -13,10 +14,22 @@ import Profile from "./pages/Profile";
 import Settings from "./pages/Settings";
 import AITutor from "./pages/AITutor";
 import Progress from "./pages/Progress";
-import Login from "./pages/Login";
+import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
+
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user, loading } = useAuth();
+  
+  if (loading) return null;
+  
+  if (!user) {
+    return <Navigate to="/auth" />;
+  }
+  
+  return children;
+};
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -25,46 +38,62 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/auth" element={<Auth />} />
           <Route path="/" element={
-            <Layout>
-              <Dashboard />
-            </Layout>
+            <ProtectedRoute>
+              <Layout>
+                <Dashboard />
+              </Layout>
+            </ProtectedRoute>
           } />
           <Route path="/explore" element={
-            <Layout>
-              <Courses />
-            </Layout>
+            <ProtectedRoute>
+              <Layout>
+                <Courses />
+              </Layout>
+            </ProtectedRoute>
           } />
           <Route path="/listings" element={
-            <Layout>
-              <Lessons />
-            </Layout>
+            <ProtectedRoute>
+              <Layout>
+                <Lessons />
+              </Layout>
+            </ProtectedRoute>
           } />
           <Route path="/messages" element={
-            <Layout>
-              <Messages />
-            </Layout>
+            <ProtectedRoute>
+              <Layout>
+                <Messages />
+              </Layout>
+            </ProtectedRoute>
           } />
           <Route path="/ai-tutor" element={
-            <Layout>
-              <AITutor />
-            </Layout>
+            <ProtectedRoute>
+              <Layout>
+                <AITutor />
+              </Layout>
+            </ProtectedRoute>
           } />
           <Route path="/progress" element={
-            <Layout>
-              <Progress />
-            </Layout>
+            <ProtectedRoute>
+              <Layout>
+                <Progress />
+              </Layout>
+            </ProtectedRoute>
           } />
           <Route path="/profile" element={
-            <Layout>
-              <Profile />
-            </Layout>
+            <ProtectedRoute>
+              <Layout>
+                <Profile />
+              </Layout>
+            </ProtectedRoute>
           } />
           <Route path="/settings" element={
-            <Layout>
-              <Settings />
-            </Layout>
+            <ProtectedRoute>
+              <Layout>
+                <Settings />
+              </Layout>
+            </ProtectedRoute>
           } />
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Bell, User, Menu, Settings, LogOut, BookOpen, GraduationCap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -23,9 +22,14 @@ const Navbar = ({ toggleSidebar }: NavbarProps) => {
     navigate('/profile');
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      toast.error('Error signing out');
+      return;
+    }
     toast.success("Successfully logged out");
-    navigate('/login');
+    navigate('/auth');
   };
 
   return (
