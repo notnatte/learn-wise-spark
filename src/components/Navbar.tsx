@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Bell, User, Menu, Settings, LogOut, BookOpen, GraduationCap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -10,6 +11,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
 
 interface NavbarProps {
   toggleSidebar: () => void;
