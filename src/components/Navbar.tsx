@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Bell, User, Menu, Settings, LogOut, BookOpen, GraduationCap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -35,14 +36,14 @@ const Navbar = ({ toggleSidebar }: NavbarProps) => {
   };
 
   return (
-    <nav className="w-full bg-white shadow-sm p-4 flex items-center justify-between">
+    <nav className="w-full bg-background border-b border-border p-4 flex items-center justify-between">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" onClick={toggleSidebar} className="md:hidden">
           <Menu className="h-5 w-5" />
         </Button>
         <div className="flex items-center gap-2">
           <div className="rounded-full bg-primary w-8 h-8 flex items-center justify-center">
-            <span className="text-white font-bold">LW</span>
+            <span className="text-primary-foreground font-bold">LW</span>
           </div>
           <span className="font-bold text-primary hidden sm:inline">LearnWise</span>
         </div>

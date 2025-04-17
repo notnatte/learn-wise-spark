@@ -2,6 +2,7 @@
 import React from 'react';
 import { Home, BookOpen, GraduationCap, MessageSquare, User, Settings, BookMarked, Award } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useTheme } from '@/components/ThemeProvider';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -10,6 +11,9 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ isOpen, currentRoute, onNavigate }: SidebarProps) => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+
   const navItems = [
     { icon: Home, label: 'Dashboard', route: '/' },
     { icon: BookOpen, label: 'Courses', route: '/explore' },
@@ -31,10 +35,10 @@ const Sidebar = ({ isOpen, currentRoute, onNavigate }: SidebarProps) => {
     >
       <div className="flex items-center justify-center h-16 border-b border-sidebar-border">
         {isOpen ? (
-          <h1 className="text-white font-bold text-xl">LearnWise</h1>
+          <h1 className="text-sidebar-foreground font-bold text-xl">LearnWise</h1>
         ) : (
-          <div className="hidden md:flex items-center justify-center rounded-full bg-white w-8 h-8">
-            <span className="font-bold text-primary">LW</span>
+          <div className="hidden md:flex items-center justify-center rounded-full bg-sidebar-primary w-8 h-8">
+            <span className="font-bold text-sidebar-primary-foreground">LW</span>
           </div>
         )}
       </div>
@@ -48,8 +52,8 @@ const Sidebar = ({ isOpen, currentRoute, onNavigate }: SidebarProps) => {
                 className={cn(
                   "flex items-center w-full p-3 rounded-lg transition-colors",
                   currentRoute === item.route
-                    ? "bg-white text-primary"
-                    : "text-white hover:bg-sidebar-accent hover:text-primary"
+                    ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                    : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                 )}
               >
                 <item.icon className="h-5 w-5" />
@@ -62,7 +66,7 @@ const Sidebar = ({ isOpen, currentRoute, onNavigate }: SidebarProps) => {
       
       <div className="p-4 border-t border-sidebar-border">
         <div className="flex items-center">
-          <div className="w-10 h-10 rounded-full bg-white flex-shrink-0 overflow-hidden">
+          <div className="w-10 h-10 rounded-full bg-sidebar-primary flex-shrink-0 overflow-hidden">
             <img 
               src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=100&auto=format&fit=crop&q=60&ixlib=rb-4.0.3" 
               alt="Profile" 
@@ -71,7 +75,7 @@ const Sidebar = ({ isOpen, currentRoute, onNavigate }: SidebarProps) => {
           </div>
           {isOpen && (
             <div className="ml-3">
-              <p className="text-white font-medium">Liya Tesfaye</p>
+              <p className="text-sidebar-foreground font-medium">Liya Tesfaye</p>
               <p className="text-sidebar-accent text-xs">Grade 11 Student</p>
             </div>
           )}

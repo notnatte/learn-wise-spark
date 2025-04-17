@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { 
   Bell, 
@@ -21,8 +21,10 @@ import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Slider } from '@/components/ui/slider';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useTheme } from '@/components/ThemeProvider';
 
 const Settings = () => {
+  const { theme, setTheme } = useTheme();
   const [notifications, setNotifications] = useState({
     email: true,
     push: true,
@@ -31,11 +33,18 @@ const Settings = () => {
   });
   
   const [preferences, setPreferences] = useState({
-    darkMode: false,
+    darkMode: theme === 'dark',
     newsletter: true,
     autoPlay: false,
     offlineMode: false
   });
+
+  useEffect(() => {
+    setPreferences(prev => ({
+      ...prev,
+      darkMode: theme === 'dark'
+    }));
+  }, [theme]);
 
   const [textSize, setTextSize] = useState(100);
   
@@ -47,15 +56,23 @@ const Settings = () => {
   };
   
   const handlePreferenceChange = (key: keyof typeof preferences) => {
-    setPreferences(prev => ({
-      ...prev,
-      [key]: !prev[key]
-    }));
-    
     if (key === 'darkMode') {
-      toast.success(`${!preferences.darkMode ? 'Dark' : 'Light'} mode activated`);
-    } else if (key === 'offlineMode') {
-      toast.success(`Offline mode ${!preferences.offlineMode ? 'enabled' : 'disabled'}`);
+      const newDarkMode = !preferences.darkMode;
+      setPreferences(prev => ({
+        ...prev,
+        darkMode: newDarkMode
+      }));
+      setTheme(newDarkMode ? 'dark' : 'light');
+      toast.success(`${newDarkMode ? 'Dark' : 'Light'} mode activated`);
+    } else {
+      setPreferences(prev => ({
+        ...prev,
+        [key]: !prev[key]
+      }));
+      
+      if (key === 'offlineMode') {
+        toast.success(`Offline mode ${!preferences.offlineMode ? 'enabled' : 'disabled'}`);
+      }
     }
   };
   
