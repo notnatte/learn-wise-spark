@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Play, Zap, Eye, BookMarked, Clock, Brain, Help, CheckCircle } from 'lucide-react';
+import { Play, Zap, Eye, BookMarked, Clock, Brain, HelpCircle, CheckCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -52,7 +52,7 @@ const QuickActions = () => {
             className="w-full flex justify-start group transition-all duration-200" 
             variant="outline"
           >
-            <Help className="h-5 w-5 mr-2 text-yellow-500 group-hover:scale-110 transition-transform" />
+            <HelpCircle className="h-5 w-5 mr-2 text-yellow-500 group-hover:scale-110 transition-transform" />
             <span>Homework Help</span>
           </Button>
           
