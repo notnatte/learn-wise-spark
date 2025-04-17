@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { 
@@ -39,6 +38,7 @@ const Settings = () => {
     offlineMode: false
   });
 
+  // Update darkMode preference when theme changes
   useEffect(() => {
     setPreferences(prev => ({
       ...prev,
