@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Bell, User, Menu, Settings, LogOut, BookOpen, GraduationCap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -12,6 +11,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 interface NavbarProps {
   toggleSidebar: () => void;
@@ -83,32 +83,35 @@ const Navbar = ({ toggleSidebar }: NavbarProps) => {
           </DropdownMenuContent>
         </DropdownMenu>
         
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <User className="h-5 w-5" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem className="cursor-pointer" onClick={handleProfileClick}>
-              <User className="h-4 w-4 mr-2" />
-              My Profile
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/settings')}>
-              <Settings className="h-4 w-4 mr-2" />
-              Settings
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/ai-tutor')}>
-              <GraduationCap className="h-4 w-4 mr-2" />
-              AI Tutor
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive" onClick={handleLogout}>
-              <LogOut className="h-4 w-4 mr-2" />
-              Log Out
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="rounded-full">
+                <User className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem className="cursor-pointer" onClick={handleProfileClick}>
+                <User className="h-4 w-4 mr-2" />
+                My Profile
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/settings')}>
+                <Settings className="h-4 w-4 mr-2" />
+                Settings
+              </DropdownMenuItem>
+              <DropdownMenuItem className="cursor-pointer" onClick={() => navigate('/ai-tutor')}>
+                <GraduationCap className="h-4 w-4 mr-2" />
+                AI Tutor
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive" onClick={handleLogout}>
+                <LogOut className="h-4 w-4 mr-2" />
+                Log Out
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </nav>
   );
