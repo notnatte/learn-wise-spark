@@ -1,9 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { toast } from 'sonner';
 import { Download, Eye, Calendar, User, Building, MessageSquare } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Label } from '@/components/ui/label';
 import { useTheme } from '@/components/ThemeProvider';
 import NotificationSettings from '@/components/settings/NotificationSettings';
 import DisplaySettings from '@/components/settings/DisplaySettings';
@@ -28,7 +28,6 @@ const Settings = () => {
 
   const [textSize, setTextSize] = useState(100);
   
-  // Update darkMode preference when theme changes
   useEffect(() => {
     setPreferences(prev => ({
       ...prev,
