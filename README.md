@@ -1,73 +1,102 @@
-# Welcome to your Lovable project
+# LearnWise - AI-Powered Learning Platform
 
-## Project info
+LearnWise is a modern, AI-powered learning platform that provides personalized education experiences through interactive lessons, AI tutoring, and gamified learning features.
 
-**URL**: https://lovable.dev/projects/2e99d0b0-beb9-4078-8ae5-fd2cd5382d44
+## Features
 
-## How can I edit this code?
+### Core Learning Features
+- **Interactive Lessons**: Engaging content with progress tracking
+- **AI Tutor**: 24/7 intelligent tutoring support
+- **Personalized Learning Paths**: AI-generated learning paths based on user progress
+- **Progress Tracking**: Visual progress indicators and achievement system
 
-There are several ways of editing your application.
+### Enhanced User Experience
+- **Modern UI**: Clean, intuitive interface built with React and Tailwind CSS
+- **Responsive Design**: Works seamlessly across all devices
+- **Real-time Updates**: Instant feedback and progress synchronization
+- **Offline Mode**: Learn without internet connection
 
-**Use Lovable**
+### Gamification
+- **Achievement System**: Earn badges and rewards
+- **Leaderboards**: Compete with peers
+- **Learning Streaks**: Stay motivated with daily streaks
+- **Points System**: Earn points for completing lessons and helping others
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/2e99d0b0-beb9-4078-8ae5-fd2cd5382d44) and start prompting.
+### AI Features
+- **Smart Tutoring**: AI-powered explanations and help
+- **Personalized Feedback**: Detailed analysis of your work
+- **Adaptive Learning**: Content adjusts to your pace and style
+- **Voice & Image Input**: Multiple ways to interact with the AI tutor
 
-Changes made via Lovable will be committed automatically to this repo.
+## Getting Started
 
-**Use your preferred IDE**
+### Prerequisites
+- Node.js (v16 or higher)
+- npm (v7 or higher)
+- Supabase account
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Installation
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/learn-wise-spark.git
+   cd learn-wise-spark
+   ```
 
-Follow these steps:
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+3. Create a `.env` file in the root directory with your Supabase credentials:
+   ```
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+### Building for Production
+```bash
+npm run build
 ```
 
-**Edit a file directly in GitHub**
+## Project Structure
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+```
+learn-wise-spark/
+├── src/
+│   ├── components/        # Reusable UI components
+│   ├── pages/            # Page components
+│   ├── lib/              # Utility functions and services
+│   │   ├── ai/          # AI-related functionality
+│   │   ├── offline/     # Offline mode management
+│   │   └── gamification/# Gamification features
+│   ├── hooks/           # Custom React hooks
+│   └── integrations/    # Third-party integrations
+├── public/              # Static assets
+└── package.json         # Project dependencies
+```
 
-**Use GitHub Codespaces**
+## Contributing
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-## What technologies are used for this project?
+## License
 
-This project is built with:
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Acknowledgments
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/2e99d0b0-beb9-4078-8ae5-fd2cd5382d44) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes it is!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+- [React](https://reactjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Supabase](https://supabase.io/)
+- [Framer Motion](https://www.framer.com/motion/)
+- [Lucide Icons](https://lucide.dev/)
