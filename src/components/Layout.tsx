@@ -1,9 +1,10 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import MobileNav from './MobileNav';
+import { useTheme } from '@/components/ThemeProvider';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -13,6 +14,17 @@ const Layout = ({ children }: LayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const location = useLocation();
   const navigate = useNavigate();
+  const { theme } = useTheme();
+
+  // Apply dark class to html element based on theme
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [theme]);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -23,7 +35,7 @@ const Layout = ({ children }: LayoutProps) => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className={`min-h-screen flex flex-col bg-background text-foreground`}>
       <Navbar toggleSidebar={toggleSidebar} />
       
       <div className="flex flex-1 overflow-hidden">
