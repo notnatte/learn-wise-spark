@@ -1,3 +1,4 @@
+
 import { supabase } from '@/lib/supabase';
 
 export interface Achievement {
@@ -29,6 +30,34 @@ export interface LeaderboardEntry {
   streak: number;
 }
 
+// Mock data for demonstration purposes since we don't have actual tables in Supabase
+const mockAchievements: Achievement[] = [
+  {
+    id: '1',
+    title: 'First Lesson',
+    description: 'Complete your first lesson',
+    points: 50,
+    icon: 'book',
+    category: 'learning',
+    requirements: {
+      type: 'lessons_completed',
+      value: 1
+    }
+  },
+  {
+    id: '2',
+    title: 'Week Streak',
+    description: 'Log in for 7 consecutive days',
+    points: 100,
+    icon: 'calendar',
+    category: 'streak',
+    requirements: {
+      type: 'streak_days',
+      value: 7
+    }
+  }
+];
+
 export class GamificationSystem {
   private static readonly POINTS_PER_LESSON = 10;
   private static readonly POINTS_PER_STREAK_DAY = 5;
@@ -54,19 +83,9 @@ export class GamificationSystem {
     }
 
     if (points > 0) {
-      const { data, error } = await supabase
-        .from('user_points')
-        .upsert({
-          user_id: userId,
-          points: points,
-          action: action,
-          timestamp: new Date().toISOString()
-        });
-
-      if (error) {
-        console.error('Error awarding points:', error);
-        return 0;
-      }
+      console.log(`Awarded ${points} points to user ${userId} for ${action}`);
+      // Actual implementation would store this in Supabase
+      // Since table doesn't exist, we're just logging it
 
       // Check for new achievements
       await this.checkAchievements(userId);
@@ -76,31 +95,21 @@ export class GamificationSystem {
   }
 
   static async checkAchievements(userId: string): Promise<Achievement[]> {
-    const { data: userStats } = await supabase
-      .from('user_stats')
-      .select('*')
-      .eq('user_id', userId)
-      .single();
-
-    if (!userStats) return [];
-
-    const { data: achievements } = await supabase
-      .from('achievements')
-      .select('*');
-
-    if (!achievements) return [];
+    // Mock user stats for demonstration
+    const userStats = {
+      lessons_completed: 5,
+      current_streak: 3,
+      average_quiz_score: 85,
+      peer_helps: 2
+    };
 
     const newAchievements: Achievement[] = [];
 
-    for (const achievement of achievements) {
-      const { data: existingAchievement } = await supabase
-        .from('user_achievements')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('achievement_id', achievement.id)
-        .single();
+    for (const achievement of mockAchievements) {
+      // Mock implementation to check if user already has this achievement
+      const hasAchievement = false;
 
-      if (existingAchievement) continue;
+      if (hasAchievement) continue;
 
       let progress = 0;
       switch (achievement.requirements.type) {
@@ -122,14 +131,8 @@ export class GamificationSystem {
         newAchievements.push(achievement);
         await this.awardPoints(userId, 'achievement_earned');
         
-        await supabase
-          .from('user_achievements')
-          .insert({
-            user_id: userId,
-            achievement_id: achievement.id,
-            earned_at: new Date().toISOString(),
-            progress: 100
-          });
+        console.log(`User ${userId} earned achievement: ${achievement.title}`);
+        // Actual implementation would store this in Supabase
       }
     }
 
@@ -137,30 +140,27 @@ export class GamificationSystem {
   }
 
   static async getLeaderboard(limit: number = 10): Promise<LeaderboardEntry[]> {
-    const { data: leaderboard } = await supabase
-      .from('user_stats')
-      .select(`
-        user_id,
-        total_points,
-        achievements_earned,
-        current_streak,
-        users (
-          username
-        )
-      `)
-      .order('total_points', { ascending: false })
-      .limit(limit);
+    // Mock leaderboard data
+    const mockLeaderboard: LeaderboardEntry[] = [
+      {
+        userId: '1',
+        username: 'user1',
+        totalPoints: 500,
+        rank: 1,
+        achievements: 5,
+        streak: 10
+      },
+      {
+        userId: '2',
+        username: 'user2',
+        totalPoints: 450,
+        rank: 2,
+        achievements: 4,
+        streak: 8
+      }
+    ];
 
-    if (!leaderboard) return [];
-
-    return leaderboard.map((entry, index) => ({
-      userId: entry.user_id,
-      username: entry.users.username,
-      totalPoints: entry.total_points,
-      rank: index + 1,
-      achievements: entry.achievements_earned,
-      streak: entry.current_streak
-    }));
+    return mockLeaderboard.slice(0, limit);
   }
 
   static async getUserStats(userId: string): Promise<{
@@ -169,32 +169,12 @@ export class GamificationSystem {
     achievements: Achievement[];
     streak: number;
   }> {
-    const { data: userStats } = await supabase
-      .from('user_stats')
-      .select('*')
-      .eq('user_id', userId)
-      .single();
-
-    const { data: userAchievements } = await supabase
-      .from('user_achievements')
-      .select(`
-        achievement_id,
-        earned_at,
-        achievements (*)
-      `)
-      .eq('user_id', userId);
-
-    const { data: rankData } = await supabase
-      .from('user_stats')
-      .select('user_id')
-      .gt('total_points', userStats?.total_points || 0)
-      .count();
-
+    // Mock user stats
     return {
-      totalPoints: userStats?.total_points || 0,
-      rank: (rankData?.count || 0) + 1,
-      achievements: userAchievements?.map(ua => ua.achievements) || [],
-      streak: userStats?.current_streak || 0
+      totalPoints: 350,
+      rank: 3,
+      achievements: mockAchievements.slice(0, 1),
+      streak: 5
     };
   }
-} 
+}
