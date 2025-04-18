@@ -73,26 +73,42 @@ const mockLessons: Lesson[] = [
   }
 ];
 
+const mockEnrollments: Enrollment[] = [
+  {
+    id: '1',
+    user_id: 'user-123',
+    course_id: '1',
+    enrolled_at: new Date().toISOString()
+  }
+];
+
+const mockInstructors = [
+  {
+    id: 'user-123',
+    username: 'instructor1',
+    full_name: 'Jane Doe',
+    avatar_url: null
+  }
+];
+
 export const courseService = {
   // Get all published courses
   async getPublishedCourses(): Promise<Course[]> {
-    // Mock implementation until Supabase tables are created
     return mockCourses.filter(course => course.published);
   },
   
   // Get a course by ID with details
   async getCourseById(courseId: string): Promise<CourseWithDetails | null> {
-    // Mock implementation until Supabase tables are created
     const course = mockCourses.find(c => c.id === courseId);
     if (!course) return null;
     
     const lessons = mockLessons.filter(l => l.course_id === courseId);
     
-    // Mock instructor data
-    const instructor = {
+    // Get instructor data
+    const instructor = mockInstructors.find(i => i.id === course.created_by) || {
       id: course.created_by,
-      username: "instructor1",
-      full_name: "Jane Doe",
+      username: "unknown",
+      full_name: "Unknown Instructor",
       avatar_url: null
     };
     
@@ -102,8 +118,7 @@ export const courseService = {
     let progress = 0;
     
     if (user) {
-      // Mock enrollment check
-      enrolled = true;
+      enrolled = mockEnrollments.some(e => e.user_id === user.id && e.course_id === courseId);
       progress = 25; // Mock progress
     }
     

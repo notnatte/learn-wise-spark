@@ -12,9 +12,9 @@ interface OfflineLesson {
 }
 
 interface OfflineProgress {
-  id: string; // Updated to match expected property
+  id: string;
   lessonId: string;
-  userId: string; // Added this missing property
+  userId: string;
   progress: number;
   completed: boolean;
   lastUpdated: Date;

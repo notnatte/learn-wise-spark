@@ -58,6 +58,36 @@ const mockAchievements: Achievement[] = [
   }
 ];
 
+// Mock data for leaderboard
+const mockLeaderboard: LeaderboardEntry[] = [
+  {
+    userId: '1',
+    username: 'user1',
+    totalPoints: 500,
+    rank: 1,
+    achievements: 5,
+    streak: 10
+  },
+  {
+    userId: '2',
+    username: 'user2',
+    totalPoints: 450,
+    rank: 2,
+    achievements: 4,
+    streak: 8
+  }
+];
+
+// Mock data for user achievements
+const mockUserAchievements: UserAchievement[] = [
+  {
+    userId: '1',
+    achievementId: '1',
+    earnedAt: new Date(),
+    progress: 100
+  }
+];
+
 export class GamificationSystem {
   private static readonly POINTS_PER_LESSON = 10;
   private static readonly POINTS_PER_STREAK_DAY = 5;
@@ -107,7 +137,9 @@ export class GamificationSystem {
 
     for (const achievement of mockAchievements) {
       // Mock implementation to check if user already has this achievement
-      const hasAchievement = false;
+      const hasAchievement = mockUserAchievements.some(ua => 
+        ua.userId === userId && ua.achievementId === achievement.id
+      );
 
       if (hasAchievement) continue;
 
@@ -140,26 +172,7 @@ export class GamificationSystem {
   }
 
   static async getLeaderboard(limit: number = 10): Promise<LeaderboardEntry[]> {
-    // Mock leaderboard data
-    const mockLeaderboard: LeaderboardEntry[] = [
-      {
-        userId: '1',
-        username: 'user1',
-        totalPoints: 500,
-        rank: 1,
-        achievements: 5,
-        streak: 10
-      },
-      {
-        userId: '2',
-        username: 'user2',
-        totalPoints: 450,
-        rank: 2,
-        achievements: 4,
-        streak: 8
-      }
-    ];
-
+    // Return mock leaderboard data instead of trying to query Supabase
     return mockLeaderboard.slice(0, limit);
   }
 
