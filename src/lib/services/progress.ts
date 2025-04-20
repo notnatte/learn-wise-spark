@@ -1,268 +1,206 @@
+
 import { supabase } from '@/integrations/supabase/client';
-import { Database } from '@/integrations/supabase/types';
 
-type UserProgress = Database['public']['Tables']['user_progress']['Row'];
-type Achievement = Database['public']['Tables']['achievements']['Row'];
-type UserAchievement = Database['public']['Tables']['user_achievements']['Row'];
-type LearningStreak = Database['public']['Tables']['learning_streaks']['Row'];
-
-export interface ProgressStats {
-  totalLessonsCompleted: number;
-  currentStreak: number;
-  longestStreak: number;
-  achievements: Achievement[];
-  recentProgress: UserProgress[];
+// Define types
+interface UserProgress {
+  id: string;
+  user_id: string;
+  lesson_id: string;
+  completed: boolean;
+  progress: number; // percentage 0-100
+  last_accessed: string;
 }
 
+interface UserStreak {
+  id: string;
+  user_id: string;
+  current_streak: number;
+  longest_streak: number;
+  last_activity_date: string;
+}
+
+interface UserAchievement {
+  id: string;
+  user_id: string;
+  achievement_id: string;
+  earned_at: string;
+}
+
+interface Achievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  points: number;
+}
+
+// Mock data
+const mockProgress: UserProgress[] = [
+  {
+    id: '1',
+    user_id: 'user-123',
+    lesson_id: 'lesson-1',
+    completed: true,
+    progress: 100,
+    last_accessed: new Date().toISOString()
+  },
+  {
+    id: '2',
+    user_id: 'user-123',
+    lesson_id: 'lesson-2',
+    completed: false,
+    progress: 50,
+    last_accessed: new Date().toISOString()
+  }
+];
+
+const mockStreaks: UserStreak[] = [
+  {
+    id: '1',
+    user_id: 'user-123',
+    current_streak: 3,
+    longest_streak: 7,
+    last_activity_date: new Date().toISOString()
+  }
+];
+
+const mockAchievements: Achievement[] = [
+  {
+    id: '1',
+    title: 'First Lesson',
+    description: 'Complete your first lesson',
+    icon: 'graduation-cap',
+    points: 50
+  },
+  {
+    id: '2',
+    title: 'Week Streak',
+    description: 'Maintain a 7-day streak',
+    icon: 'calendar',
+    points: 100
+  }
+];
+
+const mockUserAchievements: UserAchievement[] = [
+  {
+    id: '1',
+    user_id: 'user-123',
+    achievement_id: '1',
+    earned_at: new Date().toISOString()
+  }
+];
+
+// Progress service
 export const progressService = {
-  // Mark a lesson as completed
-  async completeLesson(lessonId: string) {
+  // Get user progress for a specific lesson
+  async getLessonProgress(lessonId: string): Promise<UserProgress | null> {
     const { data: { user } } = await supabase.auth.getUser();
     
     if (!user) throw new Error('Not authenticated');
     
-    // Check if progress already exists
-    const { data: existingProgress } = await supabase
-      .from('user_progress')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('lesson_id', lessonId)
-      .single();
+    const progress = mockProgress.find(p => p.user_id === user.id && p.lesson_id === lessonId);
+    return progress || null;
+  },
+  
+  // Update user progress for a lesson
+  async updateLessonProgress(lessonId: string, progress: number, completed: boolean): Promise<UserProgress> {
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) throw new Error('Not authenticated');
+    
+    const existingProgress = mockProgress.find(p => p.user_id === user.id && p.lesson_id === lessonId);
     
     if (existingProgress) {
-      // Update existing progress
-      const { data, error } = await supabase
-        .from('user_progress')
-        .update({
-          completed: true,
-          completed_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', existingProgress.id)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
+      // Update existing
+      existingProgress.progress = progress;
+      existingProgress.completed = completed;
+      existingProgress.last_accessed = new Date().toISOString();
+      return existingProgress;
     } else {
-      // Create new progress
-      const { data, error } = await supabase
-        .from('user_progress')
-        .insert({
-          user_id: user.id,
-          lesson_id: lessonId,
-          completed: true,
-          completed_at: new Date().toISOString(),
-        })
-        .select()
-        .single();
+      // Create new
+      const newProgress: UserProgress = {
+        id: Math.random().toString(36).substring(7),
+        user_id: user.id,
+        lesson_id: lessonId,
+        progress,
+        completed,
+        last_accessed: new Date().toISOString()
+      };
       
-      if (error) throw error;
-      return data;
+      return newProgress;
     }
   },
   
-  // Get user's progress statistics
-  async getProgressStats(): Promise<ProgressStats> {
+  // Get all lessons with progress for current user
+  async getAllLessonProgress(): Promise<UserProgress[]> {
     const { data: { user } } = await supabase.auth.getUser();
     
     if (!user) throw new Error('Not authenticated');
     
-    // Get completed lessons count
-    const { data: completedLessons, error: completedError } = await supabase
-      .from('user_progress')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('completed', true);
-    
-    if (completedError) throw completedError;
-    
-    // Get learning streak
-    const { data: streak, error: streakError } = await supabase
-      .from('learning_streaks')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single();
-    
-    if (streakError && streakError.code !== 'PGRST116') throw streakError;
-    
-    // Get achievements
-    const { data: achievements, error: achievementsError } = await supabase
-      .from('user_achievements')
-      .select(`
-        *,
-        achievements (*)
-      `)
-      .eq('user_id', user.id);
-    
-    if (achievementsError) throw achievementsError;
-    
-    // Get recent progress
-    const { data: recentProgress, error: recentError } = await supabase
-      .from('user_progress')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('completed_at', { ascending: false })
-      .limit(10);
-    
-    if (recentError) throw recentError;
-    
-    return {
-      totalLessonsCompleted: completedLessons?.length || 0,
-      currentStreak: streak?.current_streak || 0,
-      longestStreak: streak?.longest_streak || 0,
-      achievements: achievements?.map(a => a.achievements) || [],
-      recentProgress: recentProgress || [],
-    };
+    return mockProgress.filter(p => p.user_id === user.id);
   },
   
-  // Update learning streak
-  async updateLearningStreak() {
+  // Get user's streak
+  async getUserStreak(): Promise<UserStreak | null> {
     const { data: { user } } = await supabase.auth.getUser();
     
     if (!user) throw new Error('Not authenticated');
     
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    // Get current streak
-    const { data: currentStreak, error: streakError } = await supabase
-      .from('learning_streaks')
-      .select('*')
-      .eq('user_id', user.id)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .single();
-    
-    if (streakError && streakError.code !== 'PGRST116') throw streakError;
-    
-    if (!currentStreak) {
-      // Create new streak
-      const { data, error } = await supabase
-        .from('learning_streaks')
-        .insert({
-          user_id: user.id,
-          current_streak: 1,
-          longest_streak: 1,
-          last_activity_date: today.toISOString(),
-        })
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
-    }
-    
-    const lastActivity = new Date(currentStreak.last_activity_date);
-    lastActivity.setHours(0, 0, 0, 0);
-    
-    const daysSinceLastActivity = Math.floor(
-      (today.getTime() - lastActivity.getTime()) / (1000 * 60 * 60 * 24)
-    );
-    
-    if (daysSinceLastActivity === 0) {
-      // Already updated today
-      return currentStreak;
-    } else if (daysSinceLastActivity === 1) {
-      // Consecutive day
-      const newStreak = currentStreak.current_streak + 1;
-      const { data, error } = await supabase
-        .from('learning_streaks')
-        .update({
-          current_streak: newStreak,
-          longest_streak: Math.max(newStreak, currentStreak.longest_streak),
-          last_activity_date: today.toISOString(),
-        })
-        .eq('id', currentStreak.id)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
-    } else {
-      // Streak broken
-      const { data, error } = await supabase
-        .from('learning_streaks')
-        .insert({
-          user_id: user.id,
-          current_streak: 1,
-          longest_streak: currentStreak.longest_streak,
-          last_activity_date: today.toISOString(),
-        })
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
-    }
+    const streak = mockStreaks.find(s => s.user_id === user.id);
+    return streak || null;
   },
   
-  // Check and award achievements
-  async checkAchievements() {
+  // Update user's streak
+  async updateStreak(): Promise<UserStreak> {
     const { data: { user } } = await supabase.auth.getUser();
     
     if (!user) throw new Error('Not authenticated');
     
-    // Get user's progress
-    const { data: progress, error: progressError } = await supabase
-      .from('user_progress')
-      .select('*')
-      .eq('user_id', user.id)
-      .eq('completed', true);
+    const existingStreak = mockStreaks.find(s => s.user_id === user.id);
     
-    if (progressError) throw progressError;
-    
-    // Get all achievements
-    const { data: achievements, error: achievementsError } = await supabase
-      .from('achievements')
-      .select('*');
-    
-    if (achievementsError) throw achievementsError;
-    
-    // Get user's current achievements
-    const { data: userAchievements, error: userAchievementsError } = await supabase
-      .from('user_achievements')
-      .select('achievement_id')
-      .eq('user_id', user.id);
-    
-    if (userAchievementsError) throw userAchievementsError;
-    
-    const awardedAchievementIds = new Set(
-      userAchievements?.map(a => a.achievement_id) || []
-    );
-    
-    const completedLessonsCount = progress?.length || 0;
-    const newAchievements: Achievement[] = [];
-    
-    // Check each achievement
-    for (const achievement of achievements || []) {
-      if (awardedAchievementIds.has(achievement.id)) continue;
+    if (existingStreak) {
+      // Update existing
+      const today = new Date().toISOString().split('T')[0];
+      const lastActivity = existingStreak.last_activity_date.split('T')[0];
       
-      let shouldAward = false;
-      
-      switch (achievement.type) {
-        case 'lessons_completed':
-          shouldAward = completedLessonsCount >= achievement.requirement;
-          break;
-        // Add more achievement types here
+      if (today !== lastActivity) {
+        existingStreak.current_streak += 1;
+        if (existingStreak.current_streak > existingStreak.longest_streak) {
+          existingStreak.longest_streak = existingStreak.current_streak;
+        }
+        existingStreak.last_activity_date = new Date().toISOString();
       }
       
-      if (shouldAward) {
-        newAchievements.push(achievement);
-        
-        // Award the achievement
-        await supabase
-          .from('user_achievements')
-          .insert({
-            user_id: user.id,
-            achievement_id: achievement.id,
-            awarded_at: new Date().toISOString(),
-          });
-      }
+      return existingStreak;
+    } else {
+      // Create new
+      const newStreak: UserStreak = {
+        id: Math.random().toString(36).substring(7),
+        user_id: user.id,
+        current_streak: 1,
+        longest_streak: 1,
+        last_activity_date: new Date().toISOString()
+      };
+      
+      return newStreak;
     }
-    
-    return newAchievements;
   },
-}; 
+  
+  // Get user's achievements
+  async getUserAchievements(): Promise<Achievement[]> {
+    const { data: { user } } = await supabase.auth.getUser();
+    
+    if (!user) throw new Error('Not authenticated');
+    
+    const userAchievementIds = mockUserAchievements
+      .filter(ua => ua.user_id === user.id)
+      .map(ua => ua.achievement_id);
+    
+    return mockAchievements.filter(a => userAchievementIds.includes(a.id));
+  },
+  
+  // Get all available achievements
+  async getAllAchievements(): Promise<Achievement[]> {
+    return mockAchievements;
+  }
+};

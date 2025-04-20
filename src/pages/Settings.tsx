@@ -28,7 +28,6 @@ const Settings = () => {
 
   const [textSize, setTextSize] = useState(100);
   
-  // Update darkMode preference when theme changes
   useEffect(() => {
     setPreferences(prev => ({
       ...prev,
