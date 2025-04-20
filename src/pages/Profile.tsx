@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { User, Mail, Lock, Camera, Book, Award, Rocket, Clock } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -15,6 +15,7 @@ import {
   SelectValue 
 } from '@/components/ui/select';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { supabase } from '@/lib/supabase';
 
 const badgeData = [
   { id: 1, name: '7-Day Streak', description: 'Completed 7 consecutive days of learning', icon: Clock, color: 'bg-blue-500' },
@@ -33,6 +34,125 @@ const Profile = () => {
   });
   
   const [isEditing, setIsEditing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [userBadges, setUserBadges] = useState(badgeData);
+  const [stats, setStats] = useState({
+    lessonsCompleted: 24,
+    quizzesTaken: 16,
+    averageScore: 85,
+    studyStreak: 8,
+    learningTime: 14.5
+  });
+  const [goals, setGoals] = useState([
+    { id: 1, title: 'Complete Physics Unit', progress: 64, color: 'bg-purple-500' },
+    { id: 2, title: 'Math Final Prep', progress: 42, color: 'bg-blue-500' },
+    { id: 3, title: 'Chemistry Lab Report', progress: 80, color: 'bg-green-500' },
+  ]);
+  
+  useEffect(() => {
+    fetchUserData();
+  }, []);
+  
+  const fetchUserData = async () => {
+    try {
+      setLoading(true);
+      
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (user) {
+        // Fetch user profile
+        const { data: profile, error: profileError } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+          
+        if (profileError && profileError.code !== 'PGRST116') {
+          throw profileError;
+        }
+        
+        if (profile) {
+          setFormData({
+            name: profile.full_name || 'Liya Tesfaye',
+            email: profile.email || user.email || 'liya.tesfaye@example.com',
+            password: '',
+            confirmPassword: '',
+            grade: profile.grade || '11',
+            favoriteSubject: profile.favorite_subject || 'math',
+          });
+        }
+        
+        // Fetch badges
+        const { data: badgesData, error: badgesError } = await supabase
+          .from('badges')
+          .select('*')
+          .eq('user_id', user.id);
+          
+        if (badgesError) throw badgesError;
+        if (badgesData && badgesData.length > 0) {
+          // Map database badges to component format
+          const mappedBadges = badgesData.map(badge => ({
+            id: badge.id,
+            name: badge.name,
+            description: badge.description,
+            icon: getIconForBadge(badge.icon),
+            color: badge.color || 'bg-blue-500'
+          }));
+          setUserBadges(mappedBadges);
+        }
+        
+        // Fetch learning stats
+        const { data: statsData, error: statsError } = await supabase
+          .from('learning_stats')
+          .select('*')
+          .eq('user_id', user.id)
+          .single();
+          
+        if (statsError && statsError.code !== 'PGRST116') throw statsError;
+        if (statsData) {
+          setStats({
+            lessonsCompleted: statsData.lessons_completed || 0,
+            quizzesTaken: statsData.quizzes_taken || 0,
+            averageScore: statsData.average_score || 0,
+            studyStreak: statsData.study_streak || 0,
+            learningTime: statsData.learning_time || 0
+          });
+        }
+        
+        // Fetch learning goals
+        const { data: goalsData, error: goalsError } = await supabase
+          .from('learning_goals')
+          .select('*')
+          .eq('user_id', user.id);
+          
+        if (goalsError) throw goalsError;
+        if (goalsData && goalsData.length > 0) {
+          const mappedGoals = goalsData.map(goal => ({
+            id: goal.id,
+            title: goal.title,
+            progress: goal.progress,
+            color: goal.color || 'bg-blue-500'
+          }));
+          setGoals(mappedGoals);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
+      toast.error('Failed to load profile data');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  // Helper function to map icon strings to components
+  const getIconForBadge = (iconName) => {
+    switch(iconName) {
+      case 'clock': return Clock;
+      case 'award': return Award;
+      case 'book': return Book;
+      default: return Award;
+    }
+  };
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -43,7 +163,7 @@ const Profile = () => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (formData.password && formData.password !== formData.confirmPassword) {
@@ -51,9 +171,88 @@ const Profile = () => {
       return;
     }
     
-    toast.success("Profile updated successfully");
-    setIsEditing(false);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast.error("You must be logged in to update your profile");
+        return;
+      }
+      
+      // Update email if changed
+      if (formData.email !== user.email) {
+        const { error: emailError } = await supabase.auth.updateUser({
+          email: formData.email
+        });
+        
+        if (emailError) throw emailError;
+      }
+      
+      // Update password if provided
+      if (formData.password) {
+        const { error: passwordError } = await supabase.auth.updateUser({
+          password: formData.password
+        });
+        
+        if (passwordError) throw passwordError;
+      }
+      
+      // Update profile data
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .upsert({
+          id: user.id,
+          full_name: formData.name,
+          email: formData.email,
+          grade: formData.grade,
+          favorite_subject: formData.favoriteSubject,
+          updated_at: new Date().toISOString()
+        });
+        
+      if (profileError) throw profileError;
+      
+      toast.success("Profile updated successfully");
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error('Failed to update profile');
+    }
   };
+  
+  const handleSetNewGoal = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast.error("You must be logged in to set a goal");
+        return;
+      }
+      
+      const { data, error } = await supabase
+        .from('learning_goals')
+        .insert({
+          user_id: user.id,
+          title: 'New Learning Goal',
+          progress: 0,
+          color: 'bg-blue-500'
+        })
+        .select();
+        
+      if (error) throw error;
+      
+      if (data) {
+        toast.success("New goal created");
+        fetchUserData(); // Refresh data
+      }
+    } catch (error) {
+      console.error('Error creating goal:', error);
+      toast.error('Failed to create goal');
+    }
+  };
+  
+  if (loading) {
+    return <div className="flex items-center justify-center h-[calc(100vh-10rem)]">Loading profile...</div>;
+  }
   
   return (
     <div className="space-y-8 animate-fade-in">
@@ -230,7 +429,7 @@ const Profile = () => {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-3 gap-4">
-                {badgeData.map((badge) => (
+                {userBadges.map((badge) => (
                   <TooltipProvider key={badge.id}>
                     <Tooltip>
                       <TooltipTrigger asChild>
@@ -266,23 +465,23 @@ const Profile = () => {
             <CardContent className="space-y-4">
               <div className="flex justify-between items-center">
                 <span className="text-sm">Lessons Completed</span>
-                <Badge variant="outline">24</Badge>
+                <Badge variant="outline">{stats.lessonsCompleted}</Badge>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Quizzes Taken</span>
-                <Badge variant="outline">16</Badge>
+                <Badge variant="outline">{stats.quizzesTaken}</Badge>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Average Score</span>
-                <Badge variant="outline">85%</Badge>
+                <Badge variant="outline">{stats.averageScore}%</Badge>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Study Streak</span>
-                <Badge className="bg-blue-500">8 days</Badge>
+                <Badge className="bg-blue-500">{stats.studyStreak} days</Badge>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm">Learning Time</span>
-                <Badge variant="outline">14.5 hrs</Badge>
+                <Badge variant="outline">{stats.learningTime} hrs</Badge>
               </div>
               <div className="mt-4 text-center">
                 <Button variant="outline" size="sm" onClick={() => window.location.href = '/progress'}>
@@ -300,44 +499,22 @@ const Profile = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center">
-                <div className="w-full">
-                  <div className="flex justify-between mb-1 text-sm">
-                    <span>Complete Physics Unit</span>
-                    <span>64%</span>
-                  </div>
-                  <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                    <div className="h-full bg-purple-500 rounded-full" style={{ width: '64%' }} />
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex items-center">
-                <div className="w-full">
-                  <div className="flex justify-between mb-1 text-sm">
-                    <span>Math Final Prep</span>
-                    <span>42%</span>
-                  </div>
-                  <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                    <div className="h-full bg-blue-500 rounded-full" style={{ width: '42%' }} />
+              {goals.map((goal) => (
+                <div key={goal.id} className="flex items-center">
+                  <div className="w-full">
+                    <div className="flex justify-between mb-1 text-sm">
+                      <span>{goal.title}</span>
+                      <span>{goal.progress}%</span>
+                    </div>
+                    <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                      <div className={`h-full ${goal.color} rounded-full`} style={{ width: `${goal.progress}%` }} />
+                    </div>
                   </div>
                 </div>
-              </div>
-              
-              <div className="flex items-center">
-                <div className="w-full">
-                  <div className="flex justify-between mb-1 text-sm">
-                    <span>Chemistry Lab Report</span>
-                    <span>80%</span>
-                  </div>
-                  <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                    <div className="h-full bg-green-500 rounded-full" style={{ width: '80%' }} />
-                  </div>
-                </div>
-              </div>
+              ))}
               
               <div className="mt-4 text-center">
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={handleSetNewGoal}>
                   Set New Goal
                 </Button>
               </div>
