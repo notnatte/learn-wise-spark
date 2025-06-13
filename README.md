@@ -1,102 +1,110 @@
-# LearnWise - AI-Powered Learning Platform
+LearnWise - Interactive Learning Platform
+LearnWise is a modern and engaging learning platform designed to provide personalized education through interactive lessons, adaptable content, and gamified learning tools.
 
-LearnWise is a modern, AI-powered learning platform that provides personalized education experiences through interactive lessons, AI tutoring, and gamified learning features.
+Features
+Core Learning Features
+Interactive Lessons: Rich, engaging content with built-in progress tracking
 
-## Features
+Custom Learning Paths: Adjusts to the user's performance and preferences
 
-### Core Learning Features
-- **Interactive Lessons**: Engaging content with progress tracking
-- **AI Tutor**: 24/7 intelligent tutoring support
-- **Personalized Learning Paths**: AI-generated learning paths based on user progress
-- **Progress Tracking**: Visual progress indicators and achievement system
+Progress Monitoring: Visual indicators, achievements, and lesson history
 
-### Enhanced User Experience
-- **Modern UI**: Clean, intuitive interface built with React and Tailwind CSS
-- **Responsive Design**: Works seamlessly across all devices
-- **Real-time Updates**: Instant feedback and progress synchronization
-- **Offline Mode**: Learn without internet connection
+Enhanced User Experience
+Modern UI: Clean, intuitive interface built with React and Tailwind CSS
 
-### Gamification
-- **Achievement System**: Earn badges and rewards
-- **Leaderboards**: Compete with peers
-- **Learning Streaks**: Stay motivated with daily streaks
-- **Points System**: Earn points for completing lessons and helping others
+Responsive Design: Optimized for desktops, tablets, and mobile devices
 
-### AI Features
-- **Smart Tutoring**: AI-powered explanations and help
-- **Personalized Feedback**: Detailed analysis of your work
-- **Adaptive Learning**: Content adjusts to your pace and style
-- **Voice & Image Input**: Multiple ways to interact with the AI tutor
+Real-time Sync: Instantly updates user progress and content
 
-## Getting Started
+Offline Access: Continue learning without an internet connection
 
-### Prerequisites
-- Node.js (v16 or higher)
-- npm (v7 or higher)
-- Supabase account
+Gamification
+Achievements: Unlock badges and milestones as you learn
 
-### Installation
+Leaderboards: Compete and compare progress with others
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/learn-wise-spark.git
-   cd learn-wise-spark
-   ```
+Daily Streaks: Stay engaged with streak-based incentives
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+Points System: Earn points by completing lessons and contributing
 
-3. Create a `.env` file in the root directory with your Supabase credentials:
-   ```
-   VITE_SUPABASE_URL=your_supabase_url
-   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-   ```
+Getting Started
+Prerequisites
+Node.js (v16 or higher)
 
-4. Start the development server:
-   ```bash
-   npm run dev
-   ```
+npm (v7 or higher)
 
-### Building for Production
-```bash
+Supabase account
+
+Installation
+Clone the repository:
+
+bash
+Copy
+Edit
+git clone https://github.com/yourusername/learn-wise-spark.git
+cd learn-wise-spark
+Install dependencies:
+
+bash
+Copy
+Edit
+npm install
+Create a .env file in the root directory with your Supabase credentials:
+
+ini
+Copy
+Edit
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+Start the development server:
+
+bash
+Copy
+Edit
+npm run dev
+Building for Production
+bash
+Copy
+Edit
 npm run build
-```
-
-## Project Structure
-
-```
+Project Structure
+php
+Copy
+Edit
 learn-wise-spark/
 ├── src/
 │   ├── components/        # Reusable UI components
-│   ├── pages/            # Page components
-│   ├── lib/              # Utility functions and services
-│   │   ├── ai/          # AI-related functionality
-│   │   ├── offline/     # Offline mode management
-│   │   └── gamification/# Gamification features
-│   ├── hooks/           # Custom React hooks
-│   └── integrations/    # Third-party integrations
-├── public/              # Static assets
-└── package.json         # Project dependencies
-```
+│   ├── pages/             # Page components
+│   ├── lib/               
+│   │   ├── tutor/         # Tutor logic and learning flow
+│   │   ├── offline/       # Offline mode support
+│   │   └── gamification/  # Gamification systems
+│   ├── hooks/             # Custom React hooks
+│   └── integrations/      # Third-party integrations
+├── public/                # Static assets
+└── package.json           # Project metadata and dependencies
+Contributing
+Fork the repository
 
-## Contributing
+Create your feature branch (git checkout -b feature/AmazingFeature)
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+Commit your changes (git commit -m 'Add some AmazingFeature')
 
-## License
+Push to the branch (git push origin feature/AmazingFeature)
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Open a Pull Request
 
-## Acknowledgments
+License
+This project is licensed under the MIT License - see the LICENSE file for details.
 
-- [React](https://reactjs.org/)
-- [Tailwind CSS](https://tailwindcss.com/)
-- [Supabase](https://supabase.io/)
-- [Framer Motion](https://www.framer.com/motion/)
-- [Lucide Icons](https://lucide.dev/)
+Acknowledgments
+React
+
+Tailwind CSS
+
+Supabase
+
+Framer Motion
+
+Lucide Icons
+
